@@ -707,3 +707,46 @@ body.dark .clear-btn {
 #about li {
     margin-bottom: 6px;
 }
+
+#how-to-use {
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+#how-to-use h2 {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+#how-to-use h3 {
+    font-size: 17px;
+    margin-top: 18px;
+    margin-bottom: 6px;
+}
+
+#how-to-use p,
+#how-to-use li {
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.6;
+}
+
+#how-to-use ul,
+#how-to-use ol {
+    padding-left: 24px;
+}
+
+#about #how-to-use {
+    padding: 0;
+    margin-top: 22px;
+    background: transparent;
+    color: inherit;
+}
+
+#about #how-to-use h2,
+#about #how-to-use h3,
+#about #how-to-use p,
+#about #how-to-use li {
+    color: inherit;
+}
