@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sentiment Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                🤖 SentimentAI
+            </div>
+
+            <nav>
+                <button class="active" data-target="analyzer">
+                    🔎 Analyzer
+                </button>
+
+                <button data-target="history">
+                    ◷ History
+                </button>
+
+                <button data-target="analytics">
+                    ▥ Analytics
+                </button>
+
+                <button data-target="about">
+                    ⓘ About Project
+                </button>
+            </nav>
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main">
+
+            <header>
+                <div>
+                    <h1>AI Sentiment Analyzer</h1>
+                    <p>Analyze text and understand its sentiment instantly.</p>
+                </div>
+
+                <button class="theme-btn" id="themeButton" onclick="toggleTheme()">
+                    🌙
+                </button>
+            </header>
+
+
+            <!-- Welcome Section -->
+            <section class="hero">
+
+                <h2>Understand the feeling behind your text 🤖</h2>
+
+                <p>
+                    Enter a review, message or feedback and analyze
+                    its sentiment using AI-style NLP.
+                </p>
+
+            </section>
+
+
+
+            <!-- Analyzer -->
+            <section class="panel" id="analyzer">
+
+                <h2>Enter Your Text</h2>
+                <textarea id="textInput" placeholder="Enter a sentence or review to analyze..." maxlength="500"
+                    oninput="updateCounter()"></textarea>
+
+                <div class="input-footer">
+
+                    <span id="textCounter">
+                        0 / 500 characters
+                    </span>
+
+                    <button class="clear-btn" onclick="clearInput()">
+                        Clear
+                    </button>
+
+                </div>
+
+
+                <div class="examples">
+
+                    <button onclick="useExample('I absolutely love this product. It is amazing and wonderful!')">
+                        😊 Positive Example
+                    </button>
+
+                    <button onclick="useExample('This product is terrible, disappointing and very slow.')">
+                        😡 Negative Example
+                    </button>
+
+                    <button onclick="useExample('The package arrived today.')">
+                        😐 Neutral Example
+                    </button>
+
+                </div>
+
+
+                <button class="analyze-btn" onclick="analyzeSentiment()">
+
+                    ✨ Analyze Sentiment
+
+                </button>
+
+
+                <!-- Result -->
+                <div class="result">
+
+                    <h2 id="result">
+                        Your result will appear here
+                    </h2>
+
+                </div>
+
+            </section>
+            <!-- History Section -->
+
+            <section class="history-section" id="history">
+
+                <div class="history-header">
+
+                    <h2>Analysis History</h2>
+
+                    <button onclick="clearHistory()">
+                        Clear History
+                    </button>
+
+                </div>
+
+                <div id="historyList">
+
+                    <p class="empty-history">
+                        No analyses yet.
+                    </p>
+
+                </div>
+
+            </section>
+            <!-- Analytics Section -->
+
+            <section class="analytics-section" id="analytics">
+
+                <h2>Analytics Dashboard</h2>
+
+                <p class="analytics-subtitle">
+                    Overview of your sentiment analysis results
+                </p>
+
+                <div class="analytics-cards">
+
+                    <div class="analytics-card">
+                        <p>Total Analyses</p>
+                        <h2 id="analyticsTotal">0</h2>
+                    </div>
+
+                    <div class="analytics-card">
+                        <p>Positive</p>
+                        <h2 id="positivePercent">0%</h2>
+                    </div>
+
+                    <div class="analytics-card">
+                        <p>Negative</p>
+                        <h2 id="negativePercent">0%</h2>
+                    </div>
+
+                    <div class="analytics-card">
+                        <p>Neutral</p>
+                        <h2 id="neutralPercent">0%</h2>
+                    </div>
+
+                </div>
+
+
+                <!-- Chart -->
+
+                <div class="chart-box">
+
+                    <h3>Sentiment Distribution</h3>
+
+                    <canvas id="sentimentChart" width="700" height="300">
+                    </canvas>
+
+                </div>
+
+            </section>
+            <!-- About Project -->
+            <section class="analytics-section" id="about">
+
+                <h2>About SentimentAI</h2>
+
+                <p class="analytics-subtitle">
+                    A frontend-based sentiment analysis mini project.
+                </p>
+
+                <h3>Project Overview</h3>
+                <p>
+                    SentimentAI analyzes text and classifies its sentiment
+                    as Positive, Negative, or Neutral using a rule-based
+                    text analysis approach.
+                </p>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Sentiment classification</li>
+                    <li>Confidence, emotion and score display</li>
+                    <li>Analysis history saved in LocalStorage</li>
+                    <li>Sentiment statistics and chart</li>
+                    <li>Dark mode and responsive layout</li>
+                </ul>
+
+                <h3>Technologies Used</h3>
+                <p>HTML, CSS and JavaScript.</p>
+
+                <h3>Limitations</h3>
+                <p>
+                    This project uses rule-based word scoring rather than
+                    a trained machine learning model. It may not reliably
+                    understand sarcasm or complex context.
+                </p>
+
+            </section>
+        </main>
+
+    </div>
+
+
+    <script>
+
+        // Positive words
+        const positiveWords = {
+            amazing: 3,
+            awesome: 3,
+            excellent: 3,
+            fantastic: 3,
+            wonderful: 3,
+            love: 3,
+            loved: 3,
+            best: 3,
+            great: 2,
+            good: 2,
+            happy: 2,
+            enjoy: 2,
+            enjoyed: 2,
+            perfect: 3,
+            beautiful: 2,
+            brilliant: 3,
+            helpful: 2,
+            easy: 1,
+            fast: 1,
+            nice: 1,
+            fun: 2,
+            success: 2,
+            like: 1,
+            liked: 2,
+            impressive: 2,
+            satisfied: 2,
+            recommend: 2
+        };
+
+
+        // Negative words
+        const negativeWords = {
+            terrible: -3,
+            awful: -3,
+            hate: -3,
+            hated: -3,
+            worst: -3,
+            bad: -2,
+            poor: -2,
+            sad: -2,
+            angry: -3,
+            disappointing: -2,
+            disappointed: -2,
+            boring: -2,
+            slow: -1,
+            difficult: -1,
+            problem: -2,
+            problems: -2,
+            fail: -2,
+            failed: -2,
+            useless: -3,
+            rude: -2,
+            broken: -2,
+            wrong: -2,
+            annoying: -2,
+            annoyed: -2,
+            expensive: -1
+        };
+
+
+        // Words that increase intensity
+        const intensifiers = {
+            very: 1.4,
+            really: 1.35,
+            extremely: 1.6,
+            absolutely: 1.5,
+            so: 1.2
+        };
+
+
+        // Words that reverse sentiment
+        const negations = [
+            "not",
+            "never",
+            "no",
+            "don't",
+            "didn't",
+            "isn't",
+            "wasn't",
+            "can't",
+            "cannot"
+        ];
+
+
+        function tokenize(text) {
+
+            return text
+                .toLowerCase()
+                .replace(/[^a-zA-Z\s']/g, " ")
+                .split(/\s+/)
+                .filter(Boolean);
+
+        }
+
+
+        function classify(text) {
+
+            const words = tokenize(text);
+
+            let score = 0;
+            let detectedWords = [];
+
+            for (let i = 0; i < words.length; i++) {
+
+                let word = words[i];
+
+                let value =
+                    positiveWords[word] ??
+                    negativeWords[word] ??
+                    0;
+
+
+                if (value !== 0) {
+
+                    // Check for negation
+                    if (
+                        negations.includes(words[i - 1]) ||
+                        negations.includes(words[i - 2])
+                    ) {
+                        value = value * -1;
+                    }
+
+
+                    // Check for intensifier
+                    const previousWord = words[i - 1];
+
+                    if (intensifiers[previousWord]) {
+                        value = value * intensifiers[previousWord];
+                    }
+
+
+                    score += value;
+
+                    detectedWords.push(word);
+                }
+            }
+
+
+            // Decide sentiment
+            let sentiment;
+
+            if (score > 0.5) {
+
+                sentiment = "Positive";
+
+            } else if (score < -0.5) {
+
+                sentiment = "Negative";
+
+            } else {
+
+                sentiment = "Neutral";
+            }
+
+
+            // Confidence
+            let confidence;
+
+            if (sentiment === "Neutral") {
+
+                confidence = 65;
+
+            } else {
+
+                confidence = Math.min(
+                    98,
+                    Math.round(70 + Math.abs(score) * 5)
+                );
+
+            }
+
+
+            // Emotion
+            let emotion;
+
+            if (sentiment === "Positive") {
+
+                if (
+                    detectedWords.includes("love") ||
+                    detectedWords.includes("amazing") ||
+                    detectedWords.includes("awesome")
+                ) {
+                    emotion = "Excited";
+                } else {
+                    emotion = "Happy";
+                }
+
+            } else if (sentiment === "Negative") {
+
+                if (
+                    detectedWords.includes("angry") ||
+                    detectedWords.includes("hate") ||
+                    detectedWords.includes("hated")
+                ) {
+                    emotion = "Angry";
+                } else {
+                    emotion = "Sad";
+                }
+
+            } else {
+
+                emotion = "Neutral";
+            }
+
+
+            // Convert score to 0-100
+            let scoreValue = Math.max(
+                0,
+                Math.min(100, Math.round(50 + score * 10))
+            );
+
+
+            return {
+                sentiment: sentiment,
+                confidence: confidence,
+                emotion: emotion,
+                score: scoreValue,
+                detectedWords: detectedWords
+            };
+
+        }
+
+
+        function analyzeSentiment() {
+
+            const text =
+                document.getElementById("textInput").value.trim();
+
+            // 1. Validate input
+            if (!text) {
+                document.getElementById("result").innerHTML = `
+            <div class="error-message">
+                ⚠️ Please enter some text first.
+            </div>
+        `;
+                return;
+            }
+
+            // 2. Display loading message
+            document.getElementById("result").innerHTML = `
+        <div class="loading">
+            🤖 Analyzing sentiment...
+        </div>
+    `;
+
+            // 3. Wait 500 milliseconds
+            setTimeout(() => {
+
+                // 4. YOUR EXISTING ANALYSIS CODE GOES HERE:
+                //    - Classify sentiment
+                //    - Calculate confidence, emotion and score
+                //    - Save analysis to history
+                //    - Update analytics
+                //    - Display the final result
+
+
+
+                const result = classify(text);
+                saveHistory({
+
+                    text: text,
+
+                    sentiment: result.sentiment,
+
+                    confidence: result.confidence,
+
+                    emotion: result.emotion,
+
+                    score: result.score,
+
+                    time: new Date().toLocaleString()
+
+                });
+
+                displayHistory();
+
+                updateAnalytics();
+
+
+                document.getElementById("result").innerHTML = `
+
+        <h2>
+            ${result.sentiment === "Positive"
+                        ? "😊"
+                        : result.sentiment === "Negative"
+                            ? "😞"
+                            : "😐"
+                    }
+
+            ${result.sentiment}
+        </h2>
+
+        <p style="margin-top:10px;">
+            ${text}
+        </p>
+
+        <br>
+
+        <p>
+            <strong>Confidence:</strong>
+            ${result.confidence}%
+        </p>
+
+        <p>
+            <strong>Emotion:</strong>
+            ${result.emotion}
+        </p>
+
+        <p>
+            <strong>Score:</strong>
+            ${result.score}/100
+        </p>
+
+        <br>
+
+        <p>
+            ${result.detectedWords.length > 0
+                        ? "Detected sentiment words: " +
+                        result.detectedWords.join(", ")
+                        : "No strong sentiment words detected."
+                    }
+        </p>
+
+    `;
+
+            }, 5000);
+
+        }
+
+
+
+        // ===============================
+        // HISTORY / LOCAL STORAGE
+        // ===============================
+
+        function getHistory() {
+
+            return JSON.parse(
+                localStorage.getItem("sentimentHistory") || "[]"
+            );
+
+        }
+
+
+        function saveHistory(data) {
+
+            let history = getHistory();
+
+            history.unshift(data);
+
+            // Keep only the latest 50 analyses
+            history = history.slice(0, 50);
+
+            localStorage.setItem(
+                "sentimentHistory",
+                JSON.stringify(history)
+            );
+
+        }
+
+
+        function displayHistory() {
+
+            const history = getHistory();
+
+            const historyList =
+                document.getElementById("historyList");
+
+
+            if (history.length === 0) {
+
+                historyList.innerHTML =
+                    `<p class="empty-history">
+                No analyses yet.
+            </p>`;
+
+                return;
+            }
+
+
+            historyList.innerHTML = history.map(item => {
+
+                let badgeClass = "";
+
+                if (item.sentiment === "Positive") {
+
+                    badgeClass = "history-positive";
+
+                } else if (item.sentiment === "Negative") {
+
+                    badgeClass = "history-negative";
+
+                } else {
+
+                    badgeClass = "history-neutral";
+
+                }
+
+
+                return `
+
+            <div class="history-item">
+
+                <div class="history-text">
+
+                    ${item.text}
+
+                    <br>
+
+                    <small>
+                        ${item.time}
+                    </small>
+
+                </div>
+
+                <span
+                    class="history-badge ${badgeClass}">
+                    ${item.sentiment}
+                </span>
+
+            </div>
+
+        `;
+
+            }).join("");
+
+        }
+
+
+        function clearHistory() {
+
+            if (
+                confirm(
+                    "Are you sure you want to clear history?"
+                )
+            ) {
+
+                localStorage.removeItem(
+                    "sentimentHistory"
+                );
+
+                displayHistory();
+                updateAnalytics();
+            }
+
+        }
+        displayHistory();
+        // ===============================
+        // ANALYTICS
+        // ===============================
+
+        function updateAnalytics() {
+
+            const history = getHistory();
+
+            const total = history.length;
+
+            const positive = history.filter(
+                item => item.sentiment === "Positive"
+            ).length;
+
+            const negative = history.filter(
+                item => item.sentiment === "Negative"
+            ).length;
+
+            const neutral = history.filter(
+                item => item.sentiment === "Neutral"
+            ).length;
+
+
+            // Total
+
+            document.getElementById(
+                "analyticsTotal"
+            ).innerText = total;
+
+
+            // Percentages
+
+            if (total > 0) {
+
+                document.getElementById(
+                    "positivePercent"
+                ).innerText =
+                    Math.round((positive / total) * 100) + "%";
+
+
+                document.getElementById(
+                    "negativePercent"
+                ).innerText =
+                    Math.round((negative / total) * 100) + "%";
+
+
+                document.getElementById(
+                    "neutralPercent"
+                ).innerText =
+                    Math.round((neutral / total) * 100) + "%";
+
+            } else {
+
+                document.getElementById(
+                    "positivePercent"
+                ).innerText = "0%";
+
+                document.getElementById(
+                    "negativePercent"
+                ).innerText = "0%";
+
+                document.getElementById(
+                    "neutralPercent"
+                ).innerText = "0%";
+
+            }
+
+
+            drawSentimentChart(
+                positive,
+                negative,
+                neutral
+            );
+
+        }
+
+        function drawSentimentChart(
+            positive,
+            negative,
+            neutral
+        ) {
+
+            const canvas =
+                document.getElementById("sentimentChart");
+
+            const ctx = canvas.getContext("2d");
+
+
+            // Clear old chart
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            const values = [
+                positive,
+                negative,
+                neutral
+            ];
+
+            const labels = [
+                "Positive",
+                "Negative",
+                "Neutral"
+            ];
+
+
+            const maxValue =
+                Math.max(...values, 1);
+
+
+            const chartHeight = 200;
+
+            const barWidth = 100;
+
+            const positions = [
+                100,
+                300,
+                500
+            ];
+
+
+            values.forEach((value, index) => {
+
+                const barHeight =
+                    (value / maxValue) *
+                    chartHeight;
+
+
+                const x =
+                    positions[index];
+
+                const y =
+                    240 - barHeight;
+
+
+                /*
+                 * Bar
+                 */
+
+                ctx.fillStyle =
+                    index === 0
+                        ? "#19a974"
+                        : index === 1
+                            ? "#e34b5f"
+                            : "#e6a700";
+
+
+                ctx.fillRect(
+                    x,
+                    y,
+                    barWidth,
+                    barHeight
+                );
+
+
+                /*
+                 * Label
+                 */
+
+                ctx.fillStyle = "#172033";
+
+                ctx.font = "15px Arial";
+
+                ctx.textAlign = "center";
+
+
+                ctx.fillText(
+                    labels[index],
+                    x + barWidth / 2,
+                    275
+                );
+
+
+                /*
+                 * Number
+                 */
+
+                ctx.font = "bold 16px Arial";
+
+                ctx.fillText(
+                    value,
+                    x + barWidth / 2,
+                    y - 10
+                );
+
+            });
+
+        }
+        displayHistory();
+        updateAnalytics();
+        loadTheme();
+
+
+
+        // ===============================
+        // DARK / LIGHT MODE
+        // ===============================
+
+        function toggleTheme() {
+
+            document.body.classList.toggle("dark");
+
+            const darkMode =
+                document.body.classList.contains("dark");
+
+
+            // Save preference
+
+            localStorage.setItem(
+                "darkMode",
+                darkMode
+            );
+
+
+            // Change icon
+
+            document.getElementById(
+                "themeButton"
+            ).innerText = darkMode
+                    ? "☀️"
+                    : "🌙";
+
+        }
+        function loadTheme() {
+
+            const darkMode =
+                localStorage.getItem("darkMode");
+
+
+            if (darkMode === "true") {
+
+                document.body.classList.add("dark");
+
+                document.getElementById(
+                    "themeButton"
+                ).innerText = "☀️";
+
+            }
+
+        }
+        // ========================================
+        // STEP 8C: EXAMPLE TEXT FUNCTION
+        // ========================================
+
+        function useExample(text) {
+            const input = document.getElementById("textInput");
+
+            input.value = text;
+
+            updateCounter();
+
+            input.focus();
+        }
+
+
+        // ========================================
+        // STEP 8C: CLEAR INPUT FUNCTION
+        // ========================================
+
+        function clearInput() {
+            const input = document.getElementById("textInput");
+            const counter = document.getElementById("textCounter");
+            const result = document.getElementById("result");
+
+            input.value = "";
+
+            counter.innerText = "0 / 500 characters";
+
+            result.innerHTML = "";
+
+            input.focus();
+        }
+
+
+        // ========================================
+        // STEP 8D: CHARACTER COUNTER FUNCTION
+        // ========================================
+
+        function updateCounter() {
+            const input = document.getElementById("textInput");
+
+            const counter = document.getElementById("textCounter");
+
+            counter.innerText =
+                input.value.length + " / 500 characters";
+        }
+        // Sidebar navigation
+        document.querySelectorAll("nav button[data-target]").forEach(button => {
+            button.addEventListener("click", () => {
+                const targetId = button.dataset.target;
+                const target = document.getElementById(targetId);
+
+                if (!target) return;
+
+                target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+                document.querySelectorAll("nav button").forEach(btn => {
+                    btn.classList.remove("active");
+                });
+
+                button.classList.add("active");
+            });
+        });
+    </script>
+</body>
+
+</html>
